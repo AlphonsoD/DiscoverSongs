@@ -9,6 +9,9 @@ import { Container, InputGroup, FormControl, Button, Row, Col, Card, ListGroup, 
 // Spotify
 import { accessToken, logout, searchForSongs, getSongRecommendations } from '../spotify'
 
+// Global styles
+import '../styles.css'
+
 const Main = () => {
     // hook for state
     const [token, setToken] = useState(null);
@@ -44,7 +47,7 @@ const Main = () => {
             {!token ? (
                 <h1>Not authorized</h1>
             ) : 
-            <div>
+            <div className='center'>
                 <h1>Find Song Recommendations</h1>
 
                 <Container className='mt-2 mb-2'>
@@ -113,7 +116,11 @@ const Main = () => {
                     </Container>
                 )}
 
-                <Container>
+                <Container className='my-auto text-center'>
+                    <button type='button' onClick={() => {
+                        setSearchResults([]);
+                        setRecommendations([]);
+                    }}>Clear</button>
                     <button type='button' onClick={logout}>Log out</button>
                 </Container>
                 

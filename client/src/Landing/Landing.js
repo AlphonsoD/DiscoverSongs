@@ -1,37 +1,36 @@
 import React from 'react';
+import { useEffect } from 'react';
+import '../styles.css'
 
-const URL = "http://localhost:5000"
+// Bootstrap 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container } from  'react-bootstrap';
+
+//const URL = "http://localhost:5000"
+
+const LOGIN_URI =
+  process.env.NODE_ENV !== 'production'
+    ? 'http://localhost:5000'
+    : 'https://ad-discoversongs.herokuapp.com';
 
 function login() {
     console.log("login function was called!");
-    const url = `${URL}/login`;
+    const url = `${LOGIN_URI}/login`;
     window.location.href = url;
     return;
 }
-
-// function test() {
-//     console.log("test function was called!");
-//     const url = `${URL}/test`;
-//     const requestOptions = {
-//         method: 'GET',
-//         headers: {
-//             'Accept': 'application/json',
-//             'Access-Control-Allow-Origin':'*',
-//             'Content-Type': 'applications/json'
-//         }
-//     }
-//     fetch(url, requestOptions)
-//     return;
-// }
 
 const Landing = () => {
     console.log(window.sessionStorage.getItem('accessToken'));
 
     return (
-        <div>
-            <h1>Discover new songs</h1>
-            <button type='button' onClick={login}>Login with Spotify</button>
+        <div className='center'>
+            <Container className='my-auto text-center'>
+                <h1>Discover New Songs</h1>
+                <button type='button' onClick={login}>Login with Spotify</button>
+            </Container>
         </div>
+        
     );
 }
 

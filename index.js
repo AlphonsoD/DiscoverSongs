@@ -3,15 +3,20 @@ var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
-var axios = require('axios');
+require('dotenv').config();
+const path = require('path');
 
 const PORT = process.env.PORT || 5000;
 const AUTHORIZE = 'https://accounts.spotify.com/authorize?';
 const SCOPE = 'playlist-modify-private playlist-modify-public user-read-private'
 
-var CLIENT_ID = 'ec3bc680649746bf80990f24b968692f'; // Your client id
-var CLIENT_SECRET = 'b3e3f1baed3d47209d25462d94c6e9fe'; // Your secret
-var REDIRECT_URI = 'http://localhost:5000/callback'; // Your redirect uri
+var CLIENT_ID = process.env.CLIENT_ID; // Your client id
+var CLIENT_SECRET = process.env.CLIENT_SECRET; // Your secret
+var REDIRECT_URI = process.env.REDIRECT_URI; // Your redirect uri
+var FRONTEND_URI = process.env.FRONTEND_URI;
+
+// Priority serve any static files.
+app.use(express.static(path.resolve(__dirname, './client/build')));
 
 var app = express();
 app.use(cors())
@@ -79,7 +84,7 @@ app.get('/callback', function(req, res) {
 
             console.log(body);
 
-            res.redirect(`http://localhost:3000/main/?${queryParams}`);
+            res.redirect(`${FRONTEND_URI}/main/?${queryParams}`);
         }
         else {
             console.log(error);
@@ -115,4 +120,10 @@ app.get('/refresh_token', (req, res) => {
 })
 
 console.log("Listening on port " + PORT);
+
+// All remaining requests return the React app, so it can handle routing.
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
+  });
+
 app.listen(PORT);
