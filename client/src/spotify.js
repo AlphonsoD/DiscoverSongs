@@ -1,3 +1,5 @@
+const URL = "http://localhost:5000"
+
 // Map for localStorage keys
 const SESSIONSTORAGE_KEYS = {
     accessToken: 'access_token',
@@ -36,7 +38,7 @@ const refreshToken = async () => {
                 logout();
             }
         const data = { refresh_token: SESSIONSTORAGE_VALUES.refreshToken };
-        fetch("http://localhost:5000/refresh_token", { method: "POST", body: data, headers: {"content-type":"application/json; charset=UTF-8"} })
+        fetch(URL + "/refresh_token", { method: "POST", body: data, headers: {"content-type":"application/json; charset=UTF-8"} })
             .then(response => {
                 window.sessionStorage.setItem(SESSIONSTORAGE_KEYS.accessToken, response.access_token);
                 window.sessionStorage.setItem(SESSIONSTORAGE_KEYS.timestamp, Date.now());
@@ -87,6 +89,7 @@ const getAccessToken = () => {
 }
 
 export const accessToken = getAccessToken();
+
 export const logout = () => {
     // Clear all sessionStorage items
     for (const property in SESSIONSTORAGE_KEYS) {
@@ -94,4 +97,38 @@ export const logout = () => {
     }
     // Navigate to homepage
     window.location = window.location.origin;
+}
+
+export const searchForSongs = async (searchText) => {
+    var query = 'https://api.spotify.com/v1/search?q=' + searchText + '&type=track&limit=5'
+
+    var searchParameters = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+        }
+    }
+
+    var results = await fetch(query, searchParameters)
+        .then(response => response.json())
+
+    return results
+}
+
+export const getSongRecommendations = async (songId) => {
+    var query = 'https://api.spotify.com/v1/recommendations?seed_tracks=' + songId + '&limit=5';
+
+    var searchParameters = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+        }
+    }
+
+    var results = await fetch(query, searchParameters)
+        .then(response => response.json())
+
+    return results
 }
