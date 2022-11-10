@@ -15,12 +15,11 @@ var CLIENT_SECRET = process.env.CLIENT_SECRET; // Your secret
 var REDIRECT_URI = process.env.REDIRECT_URI; // Your redirect uri
 var FRONTEND_URI = process.env.FRONTEND_URI;
 
-// Priority serve any static files.
-app.use(express.static(path.resolve(__dirname, './client/build')));
-
 var app = express();
 app.use(cors())
-    .use(cookieParser());
+    .use(cookieParser())
+    // Priority serve any static files.
+    .use(express.static(path.resolve(__dirname, './client/build')));
 
 var stateKey = 'spotify_auth_state';
 
